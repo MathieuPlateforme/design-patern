@@ -2,6 +2,8 @@
 
 namespace App\Class;
 
+use App\Database\Database;
+
 class Category
 {
 
