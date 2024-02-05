@@ -4,5 +4,7 @@
 			"App\\": "src/"
 		}
 	},
-	"require": {}
+	"require": {
+		"doctrine/orm": "^3.0"
+	}
 }
