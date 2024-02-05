@@ -1,181 +1,47 @@
 <?php
 
-namespace App\Class;
+namespace App\Service;
 
-class Category
+use App\Entity\User;
+use App\Repository\UserRepository;
+
+class UserService
 {
+    private $userRepository;
 
-    public function __construct(
-        private ?int $id = null,
-        private ?string $name = null,
-        private ?array $posts = []
-    ) {
-    }
-
-    /**
-     * Get the value of id
-     * 
-     * @return ?int
-     */
-    public function getId(): ?int
+    public function __construct(UserRepository $userRepository)
     {
-        return $this->id;
+        $this->userRepository = $userRepository;
     }
 
-    /**
-     * Set the value of id
-     *
-     * @param ?int $id
-     * @return  self
-     */
-    public function setId(?int $id): self
+    public function createUser(User $user): User
     {
-        $this->id = $id;
-
-        return $this;
+        // Logique pour créer un nouvel utilisateur
+        // Par exemple, vous pourriez valider les données de l'utilisateur ici
+        // Ensuite, utilisez le UserRepository pour enregistrer l'utilisateur dans la base de données
+        return $this->userRepository->save($user);
     }
 
-    /**
-     * Get the value of name
-     * 
-     * @return ?string
-     */
-    public function getName(): ?string
+    public function deleteUser(User $user)
     {
-        return $this->name;
+        // Logique pour supprimer un utilisateur
+        // Vous pourriez vérifier certaines conditions avant de supprimer l'utilisateur, par exemple, s'il n'a pas de posts associés
+        $this->userRepository->delete($user);
     }
 
-    /**
-     * Set the value of name
-     *
-     * @param ?string $name
-     * @return  self
-     */
-    public function setName(?string $name): self
+    public function getUserById(int $userId): ?User
     {
-        $this->name = $name;
-
-        return $this;
+        // Logique pour récupérer un utilisateur par son identifiant
+        // Utilisez le UserRepository pour récupérer l'utilisateur depuis la base de données
+        return $this->userRepository->findById($userId);
     }
 
-    /**
-     * Get the value of posts
-     * 
-     * @return Post[]
-     */
-    public function getPosts(): array
+    public function getUserByUsername(string $username): ?User
     {
-        return $this->posts;
+        // Logique pour récupérer un utilisateur par son nom d'utilisateur
+        // Utilisez le UserRepository pour récupérer l'utilisateur depuis la base de données
+        return $this->userRepository->findByUsername($username);
     }
 
-    /**
-     * Set the value of posts
-     *
-     * @param Post[] $posts 
-     * @return  self
-     */
-    public function setPosts(array $posts): self
-    {
-        $this->posts = $posts;
-
-        return $this;
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'posts' => count($this->posts)
-        ];
-    }
-
-    public function findOneById(int $id)
-    {
-        $pdo = Database::getConnection();
-        $query = $pdo->prepare('SELECT * FROM category WHERE id = :id');
-        $query->execute([
-            'id' => $id
-        ]);
-        $category = $query->fetch(\PDO::FETCH_ASSOC);
-        $this->setId($category['id'])
-            ->setName($category['name']);
-
-        return $this;
-    }
-
-    public function findAll()
-    {
-        $pdo = Database::getConnection();
-        $query = $pdo->prepare('SELECT * FROM category');
-        $query->execute();
-        $categories = $query->fetchAll(\PDO::FETCH_ASSOC);
-        $results = [];
-        foreach ($categories as $category) {
-            $results[] = (new Category())
-                ->setId($category['id'])
-                ->setName($category['name']);
-        }
-
-        return $results;
-    }
-
-
-    /**
-     * Save Post in database
-     *
-     * @return self
-     */
-    public function save(): self
-    {
-        if (is_null($this->id)) {
-            $this->insert();
-        } else {
-            $this->update();
-        }
-
-        return $this;
-    }
-
-    /**
-     * Insert post in database
-     *
-     * @return self
-     */
-    private function insert(): self
-    {
-        $pdo = Database::getConnection();
-        $query = $pdo->prepare('INSERT INTO category (name) VALUES (:name)');
-        $query->execute([
-            'name' => $this->name
-        ]);
-        $this->id = $pdo->lastInsertId();
-
-        return $this;
-    }
-
-    /**
-     * Udpdate post in database
-     *
-     * @return self
-     */
-    private function update(): self
-    {
-        $pdo = Database::getConnection();
-        $query = $pdo->prepare('UPDATE category SET name = :name WHERE id = :id');
-        $query->execute([
-            'name' => $this->name,
-            'id' => $this->id
-        ]);
-
-        return $this;
-    }
-
-    public function delete()
-    {
-        $pdo = Database::getConnection();
-        $query = $pdo->prepare('DELETE FROM category WHERE id = :id');
-        $query->bindValue(':id', $this->id, \PDO::PARAM_INT);
-        $query->execute();
-    }
+    // Autres méthodes selon les besoins de votre application
 }
