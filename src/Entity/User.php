@@ -2,43 +2,83 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity
- * @ORM\Table(name="users")
- */
-class User
-{
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $firstname;
-
-        /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $lastname;
+class User {
+    public function __construct(
+        private ?int $id = null,
+        private ?string $email = null,
+        private ?string $password = null,
+        private ?string $firstname = null,
+        private ?string $lastname = null,
+        private ?array $role = [],
+        private ?array $posts = [],
+        private ?array $comments = []
+    ) {
+    }
 
     /**
      * Get the value of id
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
-    
+
+    /**
+     * Set the value of id
+     *
+     * @return  self
+     */
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of email
+     */
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set the value of email
+     *
+     * @return  self
+     */
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of password
+     */
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    /**
+     * Set the value of password
+     *
+     * @return  self
+     */
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
     /**
      * Get the value of firstname
-     */ 
-    public function getFirstname()
+     */
+    public function getFirstname(): ?string
     {
         return $this->firstname;
     }
@@ -47,8 +87,8 @@ class User
      * Set the value of firstname
      *
      * @return  self
-     */ 
-    public function setFirstname($firstname)
+     */
+    public function setFirstname(string $firstname): self
     {
         $this->firstname = $firstname;
 
@@ -57,8 +97,8 @@ class User
 
     /**
      * Get the value of lastname
-     */ 
-    public function getLastname()
+     */
+    public function getLastname(): ?string
     {
         return $this->lastname;
     }
@@ -67,12 +107,75 @@ class User
      * Set the value of lastname
      *
      * @return  self
-     */ 
-    public function setLastname($lastname)
+     */
+    public function setLastname(string $lastname): self
     {
         $this->lastname = $lastname;
 
         return $this;
     }
-    
+
+    /**
+     * Get the value of role
+     */
+    public function getRole(): array
+    {
+        return $this->role;
+    }
+
+    /**
+     * Set the value of role
+     * 
+     * @param array $role
+     * @return  self
+     */
+    public function setRole(array $role): self
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * addRole
+     *
+     * @param string $role
+     * @return self
+     */
+    public function addRole(string $role): self
+    {
+        $this->role[] = $role;
+
+        return $this;
+    }
+
+    /**
+     * removeRole
+     *
+     * @param string $role
+     * @return self
+     */
+    public function removeRole(string $role): self
+    {
+        $key = array_search($role, $this->role);
+        if ($key !== false) {
+            unset($this->role[$key]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * getPosts
+     * 
+     * @return array Post[]
+     */
+    public function getPosts(): array
+    {
+        if (empty($this->posts)) {
+            $postModel = new Post();
+            $this->posts = $postModel->findByUser($this);
+        }
+        return $this->posts;
+    }
 }
