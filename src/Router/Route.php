@@ -30,11 +30,10 @@ class Route
 
     public function call()
     {
-        if (is_string($this->callable)) {
-            $params = explode('#', $this->callable);
-            $controller = "App\\Controller\\" . $params[0] . "Controller";
-            $controller = new $controller();
-            return call_user_func_array([$controller, $params[1]], $this->matches);
+        if (is_array($this->callable)) {
+            $controller = $this->callable[0];
+            $action = $this->callable[1];
+            return call_user_func_array([$controller, $action], $this->matches);
         } else {
             return call_user_func_array($this->callable, $this->matches);
         }
