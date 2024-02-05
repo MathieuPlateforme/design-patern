@@ -3,6 +3,7 @@
 namespace App\Class;
 
 use DateTime;
+use App\Database\Database;
 
 class Post
 {
