@@ -16,7 +16,7 @@ class Database
             return self::$connection;
         }
         try {
-            self::$connection = new \PDO('mysql:host=localhost;dbname=solid-blog;charset=utf8', 'root', 'root', [
+            self::$connection = new \PDO('mysql:host=localhost;dbname=solid-blog;charset=utf8', $_ENV['DB_USER'], $_ENV['DB_PASS'], [
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
                 \PDO::ATTR_TIMEOUT => 90
             ]);
