@@ -1,6 +1,6 @@
 <?php
 
-use App\Class\Controller;
+use App\Controller;
 use App\Router\Router;
 
 ?>

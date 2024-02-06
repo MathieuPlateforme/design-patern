@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Router\Router;
+use App\Entity\User;
+use App\Entity\Post;
+use App\Entity\Comment;
 
 class Controller
 {
