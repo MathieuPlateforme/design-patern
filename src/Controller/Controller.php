@@ -1,11 +1,15 @@
 <?php
 
-namespace App\Class;
+namespace App\Controller;
 
 use App\Router\Router;
 
 class Controller
 {
+
+    public function __construct()
+    {
+    }
 
     public function render($view, $params = [])
     {
