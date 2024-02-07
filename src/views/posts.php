@@ -12,10 +12,10 @@ use App\Router\Router;
             <p><?= $post->getContent() ?></p>
             <p><?= $post->getCreatedAt()->format('d/m/Y') ?></p>
             <p><?= $post->getUser()->getFirstname() ?> <?= $post->getUser()->getLastname() ?></p>
-            <a href="<?= Router::url('post', ['id' => $post->getId()]) ?>">Voir l'article</a>
+            <a href="<?= Router::url('article', ['id' => $post->getId()]) ?>">Voir l'article</a>
         </article>
     <?php endforeach ?>
     <?php for ($i = 1; $i <= $pages; $i++) : ?>
-        <a href="<?= Router::url('posts', ['page' => $i]) ?>"><?= $i ?></a>
+        <a href="<?= Router::url('articles', ['page' => $i]) ?>"><?= $i ?></a>
     <?php endfor ?>
 </body>

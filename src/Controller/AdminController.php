@@ -79,7 +79,6 @@ class AdminController extends Controller
                 continue;
             }
             $setter = 'set' . $key;
-            var_dump([$key, $value]);
             if (method_exists($instance, $setter) && null !== $instance->$getter()) {
                 $instance->$setter($value);
             }

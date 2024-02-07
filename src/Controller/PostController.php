@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Class\Post;
 use App\Controller\Controller;
 
 class PostController extends Controller

@@ -3,37 +3,22 @@
 namespace App\Controller;
 
 use App\Router\Router;
+use Doctrine\DBAL\Schema\View;
 
 class Controller
-{   
-     protected $router;
-
+{
+    protected $router;
+    private $baseUrl;
 
     public function __construct()
     {
-
-    }
-    public function index()
-    {
-        try {
-            // Logique métier ici
-            $data = $this->getSomeData(); // Exemple de logique métier
-
-            // Obtenez l'URL actuelle depuis le routeur
-            $currentUrl = $this->router->getCurrentUrl();
-
-            // Utilisez le contrôleur générique pour le rendu
-            $this->renderByURL($currentUrl, ['data' => $data]);
-        } catch (\Exception $e) {
-            // Gérer les erreurs
-            $this->render('error', ['error' => $e->getMessage()]);
-        }
+        $this->baseUrl= $_ENV['FOLDER_PATH'];
     }
 
     // Controller.php (Contrôleur générique)
     public function renderByURL($url, $params = [])
     {
-        // Extrait le dernier segment de l'URL comme vue
+        $url=str_replace($this->baseUrl,$url,'');
         $view = $this->extractLastSegmentFromURL($url);
 
         // Utilisez le contrôleur générique pour le rendu
@@ -56,6 +41,7 @@ class Controller
         if (empty($view)) {
             $view = 'index';
         }
+
 
         return $view;
     }
