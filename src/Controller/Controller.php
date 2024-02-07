@@ -2,13 +2,68 @@
 
 namespace App\Controller;
 
+use App\Router\Router;
+
 class Controller
-{
+{   
+     protected $router;
+
 
     public function __construct()
     {
+
+    }
+    public function index()
+    {
+        try {
+            // Logique métier ici
+            $data = $this->getSomeData(); // Exemple de logique métier
+
+            // Obtenez l'URL actuelle depuis le routeur
+            $currentUrl = $this->router->getCurrentUrl();
+
+            // Utilisez le contrôleur générique pour le rendu
+            $this->renderByURL($currentUrl, ['data' => $data]);
+        } catch (\Exception $e) {
+            // Gérer les erreurs
+            $this->render('error', ['error' => $e->getMessage()]);
+        }
     }
 
+    // Controller.php (Contrôleur générique)
+    public function renderByURL($url, $params = [])
+    {
+        // Extrait le dernier segment de l'URL comme vue
+        $view = $this->extractLastSegmentFromURL($url);
+
+        // Utilisez le contrôleur générique pour le rendu
+        $this->render($view, $params);
+    }
+
+    // Méthode pour extraire le dernier segment de l'URL comme vue
+    private function extractLastSegmentFromURL($url)
+    {
+        // Supprime le caractère "/" du début et fin de l'URL
+        $url = trim($url, '/');
+
+        // Divise l'URL en segments
+        $segments = explode('/', $url);
+
+        // Obtient le dernier segment comme vue
+        $view = end($segments);
+
+        // Si le dernier segment est vide, utilisez une vue par défaut
+        if (empty($view)) {
+            $view = 'index';
+        }
+
+        return $view;
+    }
+    private function getSomeData()
+    {
+        // Logique métier pour obtenir des données
+        return ['example' => 'data'];
+    }
     public function render($view, $params = [])
     {
         ob_start();

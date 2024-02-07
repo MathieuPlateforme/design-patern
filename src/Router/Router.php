@@ -6,7 +6,7 @@ class Router
 {
     private $url;
     private $routes = [];
-    private static $namedRoutes = [];
+    private $namedRoutes = [];
     private $basePath = '';
 
     public function __construct($url)
@@ -29,9 +29,10 @@ class Router
         return $this->add($path, $callable, $name, 'POST');
     }
 
-    private function add($path, $callable, $name, $method)
+    public function add($path, $callable, $name, $method)
     {
-        $path = '/' . $this->basePath . '/' . trim($path, '/');
+        $path = $this->basePath . '/' . trim($path, '/');
+       
         $route = new Route($path, $callable);
         $this->routes[$method][] = $route;
 
@@ -40,13 +41,16 @@ class Router
         }
 
         if ($name) {
-            self::$namedRoutes[$name] = $route;
+            $this->namedRoutes[$name] = $route;
         }
+
         return $route;
     }
 
     public function run()
     {
+        var_dump($this->routes);
+
         if (!isset($this->routes[$_SERVER['REQUEST_METHOD']])) {
             throw new \Exception('REQUEST_METHOD does not exist');
         }
@@ -61,12 +65,12 @@ class Router
         echo '404 Not Found';
     }
 
-    public static function url($name, $params = [])
+    public function url($name, $params = [])
     {
-        if (!isset(self::$namedRoutes[$name])) {
+        if (!isset($this->namedRoutes[$name])) {
             throw new \Exception('No route matches this name');
         }
 
-        return self::$namedRoutes[$name]->getUrl($params);
+        return $this->namedRoutes[$name]->getUrl($params);
     }
 }
