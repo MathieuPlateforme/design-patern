@@ -6,7 +6,7 @@ use App\Entity\Post;
 use App\Entity\User;
 use App\Repository\BaseRepository;
 use App\Database\Database;
-use App\Controller\PostsController;
+use App\Service\PostService;
 use App\Repository\UserRepository;
 use App\Repository\CategoryRepository;
 use DateTime;
@@ -33,7 +33,7 @@ class PostRepository extends BaseRepository
         $post->setUpdatedAt($data['updated_at'] ? new DateTime($data['updated_at']) : null);
         $post->setUser((new UserRepository())->findOneById($data['user_id']));
         $post->setCategory((new CategoryRepository())->findOneById($data['category_id']));
-        $post->setComments((new PostsController())->findByPost($data['id']));
+        $post->setComments((new PostService())->findByPost($data['id']));
         return $post;
     }
 
