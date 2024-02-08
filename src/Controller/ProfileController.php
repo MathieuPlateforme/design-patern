@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Controller\Controller;
+use App\Repository\UserRepository;
 
 class ProfileController extends Controller
 {
@@ -13,13 +14,13 @@ class ProfileController extends Controller
     
     public function profile()
     {
-        $user = new User();
+        $userRepository = new UserRepository();
         if (self::getUser() === null) {
             $this->redirect('login');
 
             return;
         }
-        $user = $user->findOneById($_SESSION['user']->getId());
+        $user = $userRepository->findOneById($_SESSION['user']->getId());
         if ($user) {
             $user->setPassword('');
             $this->render('profile', ['user' => $user]);

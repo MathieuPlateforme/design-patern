@@ -165,7 +165,10 @@ class User {
         return $this;
     }
 
-   
+    public function hasRole(string $role): bool
+    {
+        return in_array($role, $this->role);
+    }
 
     public function toArray(): array
     {
