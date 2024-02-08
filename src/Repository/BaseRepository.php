@@ -14,6 +14,8 @@ abstract class BaseRepository {
         $this->table = $this->getTableName();
     }
 
+    abstract protected function createEntity(array $data);
+
     public function save(array $data)
     {
         $fields = implode(', ', array_keys($data));
@@ -36,7 +38,13 @@ abstract class BaseRepository {
         $query = $this->connection->prepare("SELECT * FROM {$this->table} WHERE id = :id");
         $query->execute(['id' => $id]);
     
-        return $query->fetch(PDO::FETCH_ASSOC);
+        $data = $query->fetch(PDO::FETCH_ASSOC);
+    
+        if (!$data) {
+            return null; // or throw an exception, depending on your preference
+        }
+    
+        return $this->createEntity($data);
     }
 
     public function update(int $id, array $data)
