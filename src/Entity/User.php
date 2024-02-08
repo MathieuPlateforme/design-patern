@@ -184,6 +184,7 @@ class User {
         return [
             'id' => $this->id,
             'email' => $this->email,
+            'password' => $this->password,
             'firstname' => $this->firstname,
             'lastname' => $this->lastname,
             'role' => $this->role
