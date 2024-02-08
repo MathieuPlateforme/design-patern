@@ -18,7 +18,15 @@ abstract class BaseRepository {
 
     public function save(array $data)
     {
-        var_dump($data);
+
+        if (isset($data['role']) && is_array($data['role'])) {
+            $data['role'] = json_encode($data['role']);
+        }
+
+        if (isset($data['id']) && is_array($data['id'])) {
+            array_pop($date['id']);
+        }
+
         $fields = implode(', ', array_keys($data));
         $values = implode(', ', array_map(fn($key) => ':' . $key, array_keys($data)));
     
