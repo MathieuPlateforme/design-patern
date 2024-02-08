@@ -15,22 +15,22 @@ function createController($controllerClass, $additionalArgument = null)
     return new $controllerClass($additionalArgument);
 }
 $router = new Router($_SERVER['REQUEST_URI']);
-$accueil = require_once'./src/Router/accueilRoute.php';
-$posts = require_once './src/Router/articlesRoute.php';
-$profile = require_once './src/Router/profileRoute.php';
-$connexion = require_once './src/Router/connexionRoute.php';
-$admin = require_once './src/Router/adminRoute.php';
-$inscription = require_once './src/Router/inscriptionRoute.php';
-$articleRoute = require_once './src/Router/articleRoute.php';
+
+$routes = [
+    require_once './src/Router/accueilRoute.php',
+    require_once './src/Router/articlesRoute.php',
+    require_once './src/Router/profileRoute.php',
+    require_once './src/Router/connexionRoute.php',
+    require_once './src/Router/adminRoute.php',
+    require_once './src/Router/inscriptionRoute.php',
+    require_once './src/Router/articleRoute.php',
+];
 
 $router->setBasePath($_ENV['FOLDER_PATH']);
-$router->addRoutes($accueil);
-$router->addRoutes($posts);
-$router->addRoutes($profile);
-$router->addRoutes($connexion);
-$router->addRoutes($admin);
-$router->addRoutes($inscription);
-$router->addRoutes($articleRoute);
+
+foreach ($routes as $route) {
+    $router->addRoutes($route);
+}
 
 $genericController = new Controller();
 $router->run();
