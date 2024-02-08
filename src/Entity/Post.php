@@ -2,6 +2,11 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
+use App\Entity\Category;
+use DateTime;
+
+
 class Post {
     public function __construct(
         private ?int $id = null,
@@ -177,5 +182,31 @@ class Post {
         }
 
         return $this;
+    }
+    
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'content' => $this->content,
+            'created_at' => $this->createdAt->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updatedAt ? $this->updatedAt->format('Y-m-d H:i:s') : null,
+            'user' => $this->user->getEmail(),
+            'comments' => array_map(fn ($comment) => $comment->getId(), $this->comments),
+            'category' => $this->category->getName()
+        ];
     }
 }

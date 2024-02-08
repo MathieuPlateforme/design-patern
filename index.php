@@ -6,6 +6,7 @@ use App\Controller\LoginController;
 use App\Controller\RegistrationController;
 use App\Controller\ProfileController;
 use App\Controller\PostController;
+use App\Controller\PostsController;
 use App\Controller\AdminController;
 use App\Controller\Controller;
 
@@ -44,7 +45,7 @@ $router->get('/logout', [createController(LoginController::class), 'logoutUser']
 
 $router->get('/profile', [createController(ProfileController::class), 'index'], "profile");
 
-$router->get('/posts/:page', [createController(PostController::class), 'paginatedPosts'], "posts")->with('page', '[0-9]+');
+$router->get('/posts/:page', [createController(PostsController::class), 'paginatedPosts'], "posts")->with('page', '[0-9]+');
 $router->get('/post/:id', [createController(PostController::class), 'viewPost'], "post")->with('id', '[0-9]+');
 $router->post('/comments/:post_id', [createController(PostController::class), 'createComment'], "add_comment")->with('post_id', '[0-9]+');
 

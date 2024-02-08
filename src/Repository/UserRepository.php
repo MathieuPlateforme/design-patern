@@ -16,4 +16,15 @@ class UserRepository extends BaseRepository
     {
         return 'user';
     }
+
+    public function createEntity(array $data): User
+    {
+        return (new User())
+            ->setId($data['id'])
+            ->setFirstname($data['firstname'])
+            ->setLastname($data['lastname'])
+            ->setPassword($data['password'])
+            ->setEmail($data['email'])
+            ->setRole(str_split($data['role']));
+    }
 }

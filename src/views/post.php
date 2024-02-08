@@ -1,6 +1,6 @@
 <?php
 
-use App\Controller;
+use App\Controller\Controller;
 use App\Router\Router;
 
 /** @var Post $post */

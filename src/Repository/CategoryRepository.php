@@ -16,4 +16,11 @@ class CategoryRepository extends BaseRepository
     {
         return 'category';
     }
+
+    public function createEntity(array $data): Category
+    {
+        return (new Category())
+            ->setId($data['id'])
+            ->setName($data['name']);
+    }
 }
