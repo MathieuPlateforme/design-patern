@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Class\Post;
 use App\Controller\Controller;
 use App\Repository\PostRepository;
 

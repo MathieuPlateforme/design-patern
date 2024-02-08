@@ -2,13 +2,54 @@
 
 namespace App\Controller;
 
+use App\Router\Router;
+use Doctrine\DBAL\Schema\View;
+
 class Controller
 {
+    protected $router;
+    private $baseUrl;
 
     public function __construct()
     {
+        $this->baseUrl= $_ENV['FOLDER_PATH'];
     }
 
+    // Controller.php (Contrôleur générique)
+    public function renderByURL($url, $params = [])
+    {
+        $url=str_replace($this->baseUrl,$url,'');
+        $view = $this->extractLastSegmentFromURL($url);
+
+        // Utilisez le contrôleur générique pour le rendu
+        $this->render($view, $params);
+    }
+
+    // Méthode pour extraire le dernier segment de l'URL comme vue
+    private function extractLastSegmentFromURL($url)
+    {
+        // Supprime le caractère "/" du début et fin de l'URL
+        $url = trim($url, '/');
+
+        // Divise l'URL en segments
+        $segments = explode('/', $url);
+
+        // Obtient le dernier segment comme vue
+        $view = end($segments);
+
+        // Si le dernier segment est vide, utilisez une vue par défaut
+        if (empty($view)) {
+            $view = 'index';
+        }
+
+
+        return $view;
+    }
+    private function getSomeData()
+    {
+        // Logique métier pour obtenir des données
+        return ['example' => 'data'];
+    }
     public function render($view, $params = [])
     {
         ob_start();
