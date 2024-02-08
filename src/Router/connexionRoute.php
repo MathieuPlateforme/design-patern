@@ -5,10 +5,10 @@ use App\Controller\LoginController;
 
 $connexionRoute = [
     [
-        '/connexion', function () {
+        '/login', function () {
             $controller = new Controller();
             $controller->render('login');
-        }, "connexion", 'GET',
+        }, "login", 'GET',
     ],
     [
         '/login', function () {

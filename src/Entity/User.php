@@ -165,19 +165,7 @@ class User {
         return $this;
     }
 
-    /**
-     * getPosts
-     * 
-     * @return array Post[]
-     */
-    public function getPosts(): array
-    {
-        if (empty($this->posts)) {
-            $postModel = new Post();
-            $this->posts = $postModel->findByUser($this);
-        }
-        return $this->posts;
-    }
+   
 
     public function toArray(): array
     {

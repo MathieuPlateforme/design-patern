@@ -3,18 +3,21 @@
 namespace App\Controller;
 
 use App\Controller\Controller;
+use App\Entity\User;
+use App\Service\UserService;
 
 class LoginController extends Controller
 {
+    private $userEntity;
     public function __construct()
     {
+        $this->userEntity = new User();
         parent::__construct();
     }
 
     public function loginUser($email, $password)
     {
-        $user = new User();
-
+        $user = new UserService();
         if (empty($email) || empty($password)) {
             throw new \Exception("Tous les champs sont obligatoires");
             $this->redirect('login');
@@ -30,9 +33,12 @@ class LoginController extends Controller
         }
 
         $user = $user->findOneByEmail($email);
-
-        if ($user && password_verify($password, $user->getPassword())) {
-            $user->setPassword('');
+        var_dump($password);
+        $passhash=$user->getPassword();
+        var_dump(password_verify($password,$passhash));
+        var_dump($user);
+        if ($user && password_verify($password,$passhash)) {
+            $this->userEntity->setPassword('');
             $_SESSION['user'] = $user;
 
             $this->redirect('home');

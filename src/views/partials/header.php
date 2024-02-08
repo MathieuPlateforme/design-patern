@@ -29,7 +29,7 @@ use App\Router\Router;
                     <li><a href="<?= Router::url('admin', ['action' => 'list', 'entity' => 'user']) ?>">Admin</a></li>
                 <?php endif ?>
             <?php else : ?>
-                <li><a href="<?= Router::url('connexion') ?>">Se connecter</a></li>
+                <li><a href="<?= Router::url('login') ?>">Se connecter</a></li>
                 <li><a href="<?= Router::url('inscription') ?>">S'inscrire</a></li>
             <?php endif ?>
         </ul>
