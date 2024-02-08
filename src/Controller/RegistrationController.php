@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Controller\Controller;
+use App\Repository\UserRepository;
+use App\Service\UserService;
+use App\Entity\User;
 
 class RegistrationController extends Controller
 {
@@ -14,7 +17,8 @@ class RegistrationController extends Controller
     
     public function registerUser($email, $password, $confirmPassword, $firstname, $lastname)
     {
-        $user = new User();
+        $userRepository = new UserRepository();
+        $userService = new UserService($userRepository);
 
         if (empty($email) || empty($password) || empty($confirmPassword) || empty($firstname) || empty($lastname)) {
             throw new \Exception("Tous les champs sont obligatoires");
@@ -28,7 +32,7 @@ class RegistrationController extends Controller
             return;
         }
 
-        if ($user->findOneByEmail($email)) {
+        if ($userService->findOneByEmail($email)) {
             throw new \Exception("L'email existe déjà");
 
             return;
@@ -41,7 +45,7 @@ class RegistrationController extends Controller
             $user->setFirstname($firstname);
             $user->setLastname($lastname);
             $user->setRole(['ROLE_USER']);
-            $user->save();
+            $userRepository->save($user->toArray());
 
             return;
         } else {

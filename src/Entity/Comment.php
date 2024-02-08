@@ -58,7 +58,7 @@ class Comment {
         return $this->user;
     }
 
-    public function setUser(User $user): Comment
+    public function setUser(?User $user): Comment
     {
         $this->user = $user;
 
@@ -70,7 +70,7 @@ class Comment {
         return $this->post;
     }
 
-    public function setPost(Post $post): Comment
+    public function setPost(?Post $post): Comment
     {
         $this->post = $post;
 

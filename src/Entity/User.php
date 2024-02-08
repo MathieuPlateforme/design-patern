@@ -178,4 +178,15 @@ class User {
         }
         return $this->posts;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'email' => $this->email,
+            'firstname' => $this->firstname,
+            'lastname' => $this->lastname,
+            'role' => $this->role
+        ];
+    }
 }

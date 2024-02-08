@@ -34,11 +34,7 @@ class PostsController extends Controller
         $commentRepository = new CommentRepository();
         $commentsData = $commentRepository->findByPost($id);
         foreach ($commentsData as $comment) {
-            $comments[] = (new Comment())
-                ->setId($comment['id'])
-                ->setContent($comment['content'])
-                ->setCreatedAt($comment['created_at'])
-                ->setUser((new UserRepository())->findOneById($comment['user_id']));
+            $comments[] = $commentRepository->createEntity($comment);
         }
 
         return $comments;

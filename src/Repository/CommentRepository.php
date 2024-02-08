@@ -21,7 +21,6 @@ class CommentRepository extends BaseRepository
 
     public function createEntity(array $data): Comment
     {
-        var_dump($data);
         return (new Comment())
             ->setId($data['id'] ?? null)
             ->setContent($data['content'] ?? null)

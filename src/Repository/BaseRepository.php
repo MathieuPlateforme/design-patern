@@ -18,6 +18,7 @@ abstract class BaseRepository {
 
     public function save(array $data)
     {
+        var_dump($data);
         $fields = implode(', ', array_keys($data));
         $values = implode(', ', array_map(fn($key) => ':' . $key, array_keys($data)));
     

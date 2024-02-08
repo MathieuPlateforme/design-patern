@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Repository\BaseRepository;
+use App\Database\Database;
 
 class UserRepository extends BaseRepository
 {
@@ -26,5 +27,14 @@ class UserRepository extends BaseRepository
             ->setPassword($data['password'])
             ->setEmail($data['email'])
             ->setRole(str_split($data['role']));
+    }
+
+    public function findOneByEmail(string $email)
+    {
+        $connection = Database::getConnection();
+        $query = $connection->prepare('SELECT * FROM user WHERE email = :email');
+        $query->bindValue(':email', $email, \PDO::PARAM_STR);
+        $query->execute();
+        return $query->fetch(\PDO::FETCH_ASSOC);
     }
 }
