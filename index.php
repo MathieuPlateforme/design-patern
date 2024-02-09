@@ -25,7 +25,6 @@ $routes = [
     require_once './src/Router/inscriptionRoute.php',
     require_once './src/Router/articleRoute.php',
 ];
-
 $router->setBasePath($_ENV['FOLDER_PATH']);
 
 foreach ($routes as $route) {

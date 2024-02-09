@@ -45,7 +45,6 @@ class RegistrationController extends Controller
             $user->setFirstname($firstname);
             $user->setLastname($lastname);
             $user->setRole(['ROLE_USER']);
-            var_dump($user);
             $userRepository->save($user->toArray());
 
             return;
