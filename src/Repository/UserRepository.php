@@ -26,7 +26,7 @@ class UserRepository extends BaseRepository
             ->setLastname($data['lastname'])
             ->setPassword($data['password'])
             ->setEmail($data['email'])
-            ->setRole(str_split($data['role']));
+            ->setRole(json_decode($data['role']));
     }
 
     public function findOneByEmail(string $email)
