@@ -4,13 +4,19 @@ use App\Router\Router;
 
 ?>
 
+
 <body>
 
     <h1>Login</h1>
 
-    <?php if (isset($error)) : ?>
-        <p><?= $error ?></p>
-    <?php endif ?>
+    <?php
+    // Afficher le message d'erreur s'il existe
+    if (isset($_SESSION['error_message'])) {
+        echo '<p style="color: red;">' . $_SESSION['error_message'] . '</p>';
+        // Effacer le message d'erreur de la session pour ne pas l'afficher à nouveau
+        unset($_SESSION['error_message']);
+    }
+    ?>
 
     <form action="<?= Router::url('login') ?>" method="post">
         <div>
