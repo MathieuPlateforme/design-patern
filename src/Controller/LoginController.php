@@ -46,10 +46,20 @@ class LoginController extends Controller
 
 
             $user = $userService->findOneByEmail($userCredentials['email']);
-            $user->setPassword('');
-
-            $_SESSION['user'] = $user;
-            $this->redirect('accueil');
+            $passhash=$user->getPassword();
+            if ($user && password_verify($userCredentials['password'],$passhash)) {
+                $user->setPassword('');
+                $_SESSION['user'] = $user;
+    
+                $this->redirect('accueil');
+    
+                return;
+            } else {
+                throw new \Exception("Les identifiants sont incorects");
+                $this->redirect('login');
+    
+                return;
+            }
         } catch (\Exception $e) {
             // Stocker le message d'erreur dans la session
             $_SESSION['error_message'] = $e->getMessage();
