@@ -14,11 +14,13 @@ class PostsController extends Controller
         parent::__construct();
     }
 
-    public function paginatedPosts($page)
+    public function paginatedPosts($page, $sortOrder = 'asc')
     {
         $postService = new PostService();
         $posts = $postService->findAllPaginated($page);
         $pages = count($postService->findAll()) / 10;
-        $this->render('posts', ['posts' => $posts, 'pages' => $pages]);
+        $postsIterate = $postService->sortByAlphabet("asc", $posts);
+
+        $this->render('posts', ['posts' => $postsIterate, 'pages' => $pages]);
     }
 }

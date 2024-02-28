@@ -6,6 +6,7 @@ use App\Entity\Post;
 use App\Entity\Comment;
 use App\Repository\PostRepository;
 use App\Repository\CommentRepository;
+use App\Collection\PostsCollection;
 
 class PostService
 {
@@ -39,4 +40,24 @@ class PostService
         $postRepository = new PostRepository();
         return $postRepository->findAll();
     }
+
+    public function sortByAlphabet($direction, $posts){
+        $postsCollection = new PostsCollection($posts);
+        $iterator = $postsCollection->getIterator();
+        
+        $sortedPosts = [];
+
+        while ($iterator->valid()) {
+            $sortedPosts[] = $iterator->current();
+            usort($sortedPosts, function($a, $b) use ($direction) {
+                return ($direction === 'asc') ? 
+                    strcasecmp($a->getTitle(), $b->getTitle()) :
+                    -strcasecmp($a->getTitle(), $b->getTitle());
+            });
+            $iterator->next();
+        }
+
+        return $sortedPosts;
+    }
+    
 }
