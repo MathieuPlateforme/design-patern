@@ -2,50 +2,57 @@
 
 namespace App\Controller;
 
-use App\Controller\Controller;
-use App\Entity\User;
+require_once(__DIR__ . '/../handler/authHandler/baseHandler.php');
+require_once(__DIR__.'/../handler/authHandler/FileHandler.php');
 use App\Service\UserService;
+use BaseAuthenticationHandler;
+use FieldsFilledHandler;
 
 class LoginController extends Controller
 {
-    private $userEntity;
+    private $authenticationHandler;
+
     public function __construct()
     {
-        $this->userEntity = new User();
         parent::__construct();
+
+        // Créez la chaîne de responsabilité
+        $baseHandler = new BaseAuthenticationHandler;
+        $fieldsFilledHandler = new FieldsFilledHandler;
+        
+        // Configurez les gestionnaires dans l'ordre de la chaîne
+        $fieldsFilledHandler->setNextHandler($baseHandler);
+
+        $this->authenticationHandler = $fieldsFilledHandler;
     }
 
-    public function loginUser($email, $password)
+    public function loginUser()
     {
-        $user = new UserService();
-        if (empty($email) || empty($password)) {
-            throw new \Exception("Tous les champs sont obligatoires");
-            $this->redirect('login');
+        try {
+            // Récupérez les informations d'identification à partir du tableau POST
+            $userCredentials = [
+                'username' => $_POST['email'],
+                'password' => $_POST['password'],
+            ];
 
-            return;
-        }
+            // Instanciez le service UserService
+            $userService = new UserService();
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new \Exception("L'email n'est pas valide");
-            $this->redirect('login');
+            // Passe la requête à la chaîne de responsabilité
+            $this->authenticationHandler->handleRequest($userCredentials);
 
-            return;
-        }
+            // Si nous arrivons ici, l'authentification a réussi
+            $user = $userService->findOneByEmail($userCredentials['email']);
+            $user->setPassword('');
 
-        $user = $user->findOneByEmail($email);
-        $passhash=$user->getPassword();
-        if ($user && password_verify($password,$passhash)) {
-            $this->userEntity->setPassword('');
             $_SESSION['user'] = $user;
-
             $this->redirect('accueil');
-
-            return;
-        } else {
-            throw new \Exception("Les identifiants sont incorects");
+        }catch (\Exception $e) {
+            // Stocker le message d'erreur dans la session
+            $_SESSION['error_message'] = $e->getMessage();
+    
+            // Rediriger vers la page de connexion (ou rester sur la même page)
             $this->redirect('login');
-
-            return;
         }
     }
 
