@@ -2,11 +2,14 @@
 
 namespace App\Controller;
 
-require_once(__DIR__ . '/../handler/authHandler/baseHandler.php');
-require_once(__DIR__.'/../handler/authHandler/FileHandler.php');
+require_once(__DIR__ . '/../handler/authHandler/FileHandler.php');
+require_once(__DIR__ . '/../handler/authHandler/regexHandler.php');
+require_once(__DIR__ . '/../handler/authHandler/jwtHandler.php');
+
 use App\Service\UserService;
-use BaseAuthenticationHandler;
 use FieldsFilledHandler;
+use EmailPasswordValidationHandler;
+use JwtHandler;
 
 class LoginController extends Controller
 {
@@ -17,13 +20,14 @@ class LoginController extends Controller
         parent::__construct();
 
         // Créez la chaîne de responsabilité
-        $baseHandler = new BaseAuthenticationHandler;
         $fieldsFilledHandler = new FieldsFilledHandler;
-        
+        $regexHandler = new EmailPasswordValidationHandler;
+        $jwtHandler = new JwtHandler;
         // Configurez les gestionnaires dans l'ordre de la chaîne
-        $fieldsFilledHandler->setNextHandler($baseHandler);
 
         $this->authenticationHandler = $fieldsFilledHandler;
+        $this->authenticationHandler->setNextHandler($regexHandler);
+        $regexHandler->setNextHandler($jwtHandler);
     }
 
     public function loginUser()
@@ -34,23 +38,22 @@ class LoginController extends Controller
                 'email' => $_POST['email'],
                 'password' => $_POST['password'],
             ];
-
+            $this->authenticationHandler->handleRequest($userCredentials);
             // Instanciez le service UserService
             $userService = new UserService();
 
             // Passe la requête à la chaîne de responsabilité
-            $this->authenticationHandler->handleRequest($userCredentials);
 
-            // Si nous arrivons ici, l'authentification a réussi
+
             $user = $userService->findOneByEmail($userCredentials['email']);
             $user->setPassword('');
 
             $_SESSION['user'] = $user;
             $this->redirect('accueil');
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             // Stocker le message d'erreur dans la session
             $_SESSION['error_message'] = $e->getMessage();
-    
+
             // Rediriger vers la page de connexion (ou rester sur la même page)
             $this->redirect('login');
         }
@@ -59,6 +62,7 @@ class LoginController extends Controller
     public function logoutUser()
     {
         unset($_SESSION['user']);
+        unset($_SESSION['jwt']);
         $this->redirect('accueil');
     }
 }
