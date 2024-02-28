@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__.'./baseHandler.php');
+require_once(__DIR__ . './baseHandler.php');
 
 class FieldsFilledHandler extends BaseAuthenticationHandler
 {
@@ -8,6 +8,7 @@ class FieldsFilledHandler extends BaseAuthenticationHandler
     {
         echo $userCredentials['email'];
         echo $userCredentials['password'];
+        return;
         if (empty($userCredentials['email']) || empty($userCredentials['password'])) {
             echo 'FieldsValidationHandler: Username and password are required. </br>';
             throw new \Exception("Tous les champs sont obligatoires");

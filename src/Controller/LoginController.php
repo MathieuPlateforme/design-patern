@@ -31,7 +31,7 @@ class LoginController extends Controller
         try {
             // Récupérez les informations d'identification à partir du tableau POST
             $userCredentials = [
-                'username' => $_POST['email'],
+                'email' => $_POST['email'],
                 'password' => $_POST['password'],
             ];
 
