@@ -26,16 +26,23 @@ class PostService
         return $posts;
     }
 
-    public function findByPost(int $id){
+    public function findByPost(int $id)
+    {
         $commentRepository = new CommentRepository();
         $commentsData = $commentRepository->findByPost($id);
+    
+        if (empty($commentsData)) {
+            return []; // ou renvoyer un tableau vide
+        }
+    
+        $comments = [];
+    
         foreach ($commentsData as $comment) {
             $comments[] = $commentRepository->createEntity($comment);
         }
-
+    
         return $comments;
     }
-
     public function findAll(){
         $postRepository = new PostRepository();
         return $postRepository->findAll();
