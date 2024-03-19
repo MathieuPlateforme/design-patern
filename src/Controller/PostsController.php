@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Class\Category;
 use App\Entity\Post;
 use App\Controller\Controller;
 use App\Service\PostService;
@@ -22,5 +23,11 @@ class PostsController extends Controller
         $postsIterate = $postService->sortByAlphabet("asc", $posts);
 
         $this->render('posts', ['posts' => $postsIterate, 'pages' => $pages]);
+    }
+    public function createPostForm()
+    {
+        $categories = (new Category())->findAll();
+
+        $this->render('newArticle',['categories'=>$categories]);
     }
 }

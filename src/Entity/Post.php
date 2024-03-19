@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\User;
 use App\Entity\Category;
+use ArticleMemento;
 use DateTime;
 
 
@@ -209,4 +210,5 @@ class Post {
             'category' => $this->category->getName()
         ];
     }
+   
 }

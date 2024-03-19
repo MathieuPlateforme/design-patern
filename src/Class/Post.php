@@ -2,8 +2,18 @@
 
 namespace App\Class;
 
+require_once __DIR__ . '/../memento/ArticleMemento.php';
+require_once __DIR__ . '/../memento/DraftManager.php';
+
+use App\Controller\Controller;
+use App\Controller\PostController;
+use App\Controller\PostsController;
 use DateTime;
 use App\Database\Database;
+use App\Entity\User;
+use App\Repository\UserRepository;
+use ArticleMemento;
+use DraftManager;
 
 class Post
 {
@@ -358,5 +368,90 @@ class Post
             $results[] = $post;
         }
         return $results;
+    }
+
+    public function createArticle($title, $content, $category_id)
+    {
+        $controler = new PostsController;
+        try {
+            $this->validateArticleData($title, $content, $category_id);
+
+            $article = $this->createArticleInstance($title, $content, $category_id);
+
+            $article->save();
+            $controler->redirect('article', ['id' => $article->getId()]);
+        } catch (\Exception $e) {
+
+            $categories = (new Category())->findAll();
+
+
+            $controler->render('newArticle', ['error' => $e->getMessage(), 'categories' => $categories]);
+        }
+    }
+
+    private function validateArticleData($title, $content, $category_id)
+    {
+        if (empty($title) || empty($content)) {
+            throw new \Exception("Le titre et le contenu ne peuvent pas être vides");
+        }
+
+        if ($_SESSION['user'] === null) {
+            throw new \Exception("Vous devez être connecté pour créer un article");
+        }
+
+        $category = new Category();
+        $category->findOneById($category_id);
+    }
+
+    private function createArticleInstance($title, $content, $category_id)
+    {
+        $user = new Controller;
+        $article = new Post();
+        $article->setTitle($title);
+        $article->setContent($content);
+        $article->setUser($user->getUser());
+        $article->setCreatedAt(new \DateTime());
+
+        $category = new Category();
+        $category->findOneById($category_id);
+        $article->setCategory($category);
+
+        return $article;
+    }
+    public function createMemento($title, $content, $category, $userId)
+    {
+        $userRepository = new UserRepository;
+        $controler = new PostController;
+        $memento = new ArticleMemento($title, $content, $category);
+        $draftManager = new DraftManager;
+        $draftManager->addMemento($memento, $userId);
+        $controler->redirect('accueil');
+    }
+
+    public function restoreFromMemento(ArticleMemento $memento)
+    {
+        $this->title = $memento->getTitle();
+        $this->content = $memento->getContent();
+        $this->category = $memento->getCategory();
+    }
+    public function switchAction($action, $title, $content, $category)
+    {
+        $controller = new Post();
+        $user = $_SESSION['user'];
+        $userId = $user->getId();
+
+        switch ($action) {
+            case 'Create Article':
+                $controller->createArticle($title, $content, $category);
+                break;
+
+            case 'Create Memento':
+                $controller->createMemento($title, $content, $category, $userId);
+                break;
+
+            default:
+                throw new \Exception('erreur de sauvegarde ');
+                break;
+        }
     }
 }

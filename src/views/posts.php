@@ -6,6 +6,7 @@ use App\Router\Router;
 
 <body>
     <h1>Tous les articles</h1>
+    <a href="<?= Router::url('create_post_form') ?>">Créer un nouvel article</a>
     <?php foreach ($posts as $post) : ?>
         <article>
             <h2><?= $post->getTitle() ?></h2>
